@@ -6,10 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(hello_world hello_world.cpp)
 
-find_library(FORMATTER_LIB formatter PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_lib/build)
-find_library(FORMATTER_EX_LIB formatter_ex PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib/build)
-
-target_link_libraries(hello_world ${FORMATTER_EX_LIB} ${FORMATTER_LIB})
+target_link_libraries(hello_world
+    ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib/build/Release/formatter_ex.lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_lib/build/Release/formatter.lib
+)
 
 target_include_directories(hello_world PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib
