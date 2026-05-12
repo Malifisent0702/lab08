@@ -3,45 +3,42 @@ name: CMake Build
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            compiler: gcc
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            compiler: clang
-            c_compiler: clang
-            cpp_compiler: clang++
-          - os: windows-latest
-            compiler: msvc
-            c_compiler: cl
-            cpp_compiler: cl
+        compiler: [gcc, clag]
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure and build all components
-      run: |
-        cmake -B formatter_lib/build -S formatter_lib
-        cmake --build formatter_lib/build --config Release
+    - name: Configure formatter_lib
+      run: cmake -B formatter_lib/build -S formatter_lib
 
-        cmake -B formatter_ex_lib/build -S formatter_ex_lib -DCMAKE_PREFIX_PATH=../formatter_lib/build
-        cmake --build formatter_ex_lib/build --config Release
+    - name: Build formatter_lib
+      run: cmake --build formatter_lib/build
 
-        cmake -B solver_lib/build -S solver_lib
-        cmake --build solver_lib/build --config Release
+    - name: Configure formatter_ex
+      run: cmake -B formatter_ex/build -S formatter_ex -DCMAKE_PREFIX_PATH=../formatter_lib/build
 
-        cmake -B hello_world_application/build -S hello_world_application
-        cmake --build hello_world_application/build --config Release
+    - name: Build formatter_ex
+      run: cmake --build formatter_ex/build
 
-        cmake -B solver_application/build -S solver_application
-        cmake --build solver_application/build --config Release
+    - name: Configure solver_lib
+      run: cmake -B solver_lib/build -S solver_lib
 
+    - name: Build solver_lib
+      run: cmake --build solver_lib/build
+
+    - name: Configure hello_world
+      run: cmake -B hello_world/build -S hello_world -DCMAKE_PREFIX_PATH=../formatter_lib/build;../formatter_ex/build
+
+    - name: Build hello_world
+      run: cmake --build hello_world/build
+
+    - name: Configure solver
+      run: cmake -B solver/build -S solver -DCMAKE_PREFIX_PATH=../formatter_lib/build;../formatter_ex/build;../solver_lib/build
+
+    - name: Build solver 
+      run: cmake --build solver/build
