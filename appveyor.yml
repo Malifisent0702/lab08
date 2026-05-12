@@ -1,47 +1,71 @@
+
 version: 1.0.{build}
 
+
 image: Visual Studio 2019
+
 
 platform: x64
 configuration: Release
 
 clone_folder: C:\projects\lab04
 
+
 before_build:
   - cd C:\projects\lab04
 
+
   # 1. formatter_lib
+
   - mkdir build_formatter_lib
+
   - cd build_formatter_lib
-  - cmake -G "Visual Studio 16 2019" -A x64 ..
+
+  - cmake -G "Visual Studio 16 2019" -A x64 ../formatter_lib
+
   - cmake --build . --config Release
+
   - cd ..
 
-  # 2. formatter_ex_lib (зависит от formatter_lib)
-  - mkdir build_formatter_ex_lib
-  - cd build_formatter_ex_lib
-  - cmake -G "Visual Studio 16 2019" -A x64 .. -DCMAKE_PREFIX_PATH=C:\projects\lab04\build_formatter_lib
+
+  # 2. formatter_ex
+
+  - mkdir build_formatter_ex
+
+  - cd build_formatter_ex
+
+  - cmake -G "Visual Studio 16 2019" -A x64 ../formatter_ex -DCMAKE_PREFIX_PATH=C:\projects\lab04\build_formatter_lib
+
   - cmake --build . --config Release
+
   - cd ..
+
 
   # 3. solver_lib
+
   - mkdir build_solver_lib
+
   - cd build_solver_lib
-  - cmake -G "Visual Studio 16 2019" -A x64 ..\solver_lib
+
+  - cmake -G "Visual Studio 16 2019" -A x64 ../solver_lib
+
   - cmake --build . --config Release
+
   - cd ..
 
-  # 4. hello_world_application
+
+  # 4. hello_world
+
   - mkdir build_hello_world
   - cd build_hello_world
-  - cmake -G "Visual Studio 16 2019" -A x64 ..\hello_world_application -DCMAKE_PREFIX_PATH="C:\projects\lab04\build_formatter_lib;C:\projects\lab04\build_formatter_ex_lib"
+  - cmake -G "Visual Studio 16 2019" -A x64 ../hello_world -DCMAKE_PREFIX_PATH="C:\projects\lab04\build_formatter_lib;C:\projects\lab04\build_formatter_ex"
   - cmake --build . --config Release
   - cd ..
 
-  # 5. solver_application
+  # 5. solver
   - mkdir build_solver
   - cd build_solver
-  - cmake -G "Visual Studio 16 2019" -A x64 ..\solver_application -DCMAKE_PREFIX_PATH="C:\projects\lab04\build_formatter_lib;C:\projects\lab04\build_formatter_ex_lib;C:\projects\lab04\build_solver_lib"
+  - cmake -G "Visual Studio 16 2019" -A x64 ../solver -DCMAKE_PREFIX_PATH="C:\projects\lab04\build_formatter_lib;C:\projects\lab04\build_formatter_ex;C:\projects\lab04\build_solver_lib"
   - cmake --build . --config Release
   - cd ..
 
