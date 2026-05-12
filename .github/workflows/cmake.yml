@@ -8,37 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        compiler: [gcc, clag]
+      matrix: 
+        compiler: [gcc, clang]
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure formatter_lib
-      run: cmake -B formatter_lib/build -S formatter_lib
-
-    - name: Build formatter_lib
-      run: cmake --build formatter_lib/build
-
-    - name: Configure formatter_ex
-      run: cmake -B formatter_ex/build -S formatter_ex -DCMAKE_PREFIX_PATH=../formatter_lib/build
-
-    - name: Build formatter_ex
-      run: cmake --build formatter_ex/build
-
-    - name: Configure solver_lib
-      run: cmake -B solver_lib/build -S solver_lib
-
-    - name: Build solver_lib
-      run: cmake --build solver_lib/build
-
-    - name: Configure hello_world
-      run: cmake -B hello_world/build -S hello_world -DCMAKE_PREFIX_PATH=../formatter_lib/build;../formatter_ex/build
-
-    - name: Build hello_world
-      run: cmake --build hello_world/build
-
-    - name: Configure solver
-      run: cmake -B solver/build -S solver -DCMAKE_PREFIX_PATH=../formatter_lib/build;../formatter_ex/build;../solver_lib/build
-
-    - name: Build solver 
-      run: cmake --build solver/build
+    - name: Build all
+      run: |
+        cmake -B build -S .
+        cmake --build build
