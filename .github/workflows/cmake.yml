@@ -1,19 +1,25 @@
-name: CMake Build
+name: CMake Build with Tests 
 
 on:
   push:
+    branches: [ master ]
+  pull_request:
     branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix: 
-        compiler: [gcc, clang]
+
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
-    - name: Build all
-      run: |
-        cmake -B build -S .
-        cmake --build build
+    - name: Configure
+      run: cmake -H. -B_build -DBUILD_TESTS=ON
+
+    - name: Build
+      run: cmake --build _build
+
+    - name: Test
+      run: cmake --build _build --target test

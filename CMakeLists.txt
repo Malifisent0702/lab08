@@ -17,3 +17,11 @@ if(BUILD_TESTS)
     target_link_libraries(check print gtest_main)
     add_test(NAME check COMMAND check)
 endif()
+add_subdirectory(banking)
+
+
+if(BUILD_TESTS)
+    file(GLOB BANKING_TEST_SOURCES tests/banking/*.cpp)
+    list(APPEND TEST_SOURCES ${BANKING_TEST_SOURCES})
+    target_link_libraries(check banking)
+endif()
