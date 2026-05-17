@@ -1,0 +1,37 @@
+name: Create Release Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies for RPM
+      run: sudo apt-get update && sudo apt-get install -y rpm
+
+    - name: Configure with CPack
+      run: cmake -H. -B_build -DCPACK_GENERATOR="TGZ;DEB;RPM"
+
+    - name: Build project
+      run: cmake --build _build
+
+    - name: Create packages
+      run: cd _build && cpack -G "TGZ;DEB;RPM" && cd ..
+
+    - name: List generated packages
+      run: ls -la _build/*.tar.gz _build/*.deb _build/*.rpm || true
+
+    - name: Upload to GitHub Release 
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          _build/*.tar.gz
+          _build/*.deb
+          _build/*.rpm
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
