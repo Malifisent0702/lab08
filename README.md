@@ -1,2 +1,3 @@
-# lab04
-[![CMake Build](https://github.com/Malifisent0702/lab04/actions/workflows/cmake.yml/badge.svg)](https://github.com/Malifisent0702/lab04/actions/workflows/cmake.yml)
+# lab06
+
+CPack packaging example for print library.
